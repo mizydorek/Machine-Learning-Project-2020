@@ -6,7 +6,7 @@ import pandas as pd
 
 # Import Flask.
 import flask as fl 
-from flask import request, jsonfiy make_response
+from flask import request, jsonify, make_response
 
 
 # Import LinearRegression model from sklearn linear model.
@@ -22,23 +22,25 @@ app = fl.Flask(__name__)
 @app.route('/')
 def hello():
     return app.send_static_file('index.html')
-
+'''
 @app.route('/api/normal')
 def normal():
     return { 'value': np.random.normal() }
-
+'''
 @app.route('/api/linear', methods=["POST"])
 def model():
 
-    req = request.get_json()
+    data = request.get_json()
 
-    print(req)
+    model = data['model'].lower()
+    speed = float(data['speed'])
+    #print(req)
 
-    response = make_response(jsonify({ 'value': np.random.normal() }), 200)
+    power = eval(model)(speed)
+    #power = round(power, 4)
 
-    #x = np.random.choice(26)
+    response = make_response(jsonify(power), 200)
 
-    #{ 'value': linear(x) }
     return response
 
 # Load dataset function.
@@ -72,17 +74,35 @@ def preprocess():
         print("Failed to preprocess data.")
 
 # Build linear model.
-def linear(x):
+def linear(speed):
     try:
         # load preprocess data.
         x_train, x_test, y_train, y_test = preprocess()
         # Create a new linear regression model.
         model = LinearRegression()
         # Fit the data to the model.
-        model.fit(x_train, y_train);
+        model.fit(x_train, y_train)
         # Coefficient & intercept.
         coeff = [model.coef_[0], model.intercept_]
         # Function that count the linear regression.
-        return x * coeff[0] + coeff[1]
+        return speed * coeff[0] + coeff[1]
     except:
-        print("Failed to bulid and train the model.")
+        print("Failed to bulid and train the Linear model.")
+
+# Build polynomial model.
+def polynomial(speed):
+    try:
+        # load data.
+        x, y, s, p = load()
+        # Define Polynomial degree.
+        degree = 9 
+        # Fit the data 
+        poly = np.poly1d(np.polyfit(s, p, degree))
+        #  The polynomial coefficients and intercept.
+        coeff = np.poly1d(poly) 
+        # Calculate power output.
+        power = coeff[9] * speed**9 + coeff[8] * speed**8 + coeff[7] * speed**7 + coeff[6] * speed**6 + coeff[5] * speed**5 + coeff[4] * speed**4 + coeff[3] * speed**3 + coeff[2] * speed**2 +  coeff[1] * speed + coeff[0]
+
+        return power
+    except:
+        print("Failed to bulid and train the Polynomial model.")

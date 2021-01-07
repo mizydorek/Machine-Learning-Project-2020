@@ -15,28 +15,7 @@
                 <button id="generate" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                     Generate
                 </button>
-                <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700">Enter wind speed: </label>
-                    <div class="mt-1 relative rounded-md shadow-sm">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span class="text-gray-500 sm:text-sm">
-                          $
-                        </span>
-                      </div>
-                      <input type="text" name="s" id="s" class="focus:ring-indigo-700 focus:border-indigo-700 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
-                      <div class="absolute inset-y-0 right-0 flex items-center">
-                        <label for="model" class="sr-only">Currency</label>
-                        <select id="m" name="m" class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
-                          <option>Linear</option>
-                          <option>Polynomial</option>
-                          <option>Logistic</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                <button id="calculate" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                    Calculate
-                </button>
+               
                 
                     <label for="price" class="block text-sm font-medium text-gray-700">Enter wind speed: </label>
                     <div class="mt-1 relative rounded-md shadow-sm">
@@ -58,8 +37,6 @@
                     <button onclick="submit();" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                         Submit
                     </button>
-                  
-                
             </div>
         </div>
     </div>
@@ -90,9 +67,8 @@
             model: model
         };
 
-        
 
-        fetch(`${window.origin}/api/linear'`, {
+        fetch(`${window.origin}/api/linear`, {
             method: "POST",
             credentials: "include",
             body: JSON.stringify(data),
@@ -100,7 +76,12 @@
             headers: new Headers({
                 "content-type": "application/json"
             })
-        })
+        }).then(function (response){
+                response.json().then(function(data){
+                    $('.value').text(data);
+                    console.log(data)
+                })
+        });
 
     }
 
