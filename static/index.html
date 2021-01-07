@@ -6,16 +6,45 @@
     <title>Random App.</title>
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body>
 
-    <div class="container flex mx-auto .w-screen .h-screen">
-        <div class="max-w-sm mx-auto flex .object-center p-6 bg-white rounded-lg shadow-xl">
-            <p class="value"></p>
-            <button id="generate" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Generate
-            </button>
+    <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+                <p class="value"></p>
+                <div>
+                    <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                          $
+                        </span>
+                      </div>
+                      <input type="text" name="price" id="price" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                      <div class="absolute inset-y-0 right-0 flex items-center">
+                        <label for="currency" class="sr-only">Currency</label>
+                        <select id="Currency" name="currency" class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
+                          <option>USD</option>
+                          <option>CAD</option>
+                          <option>EUR</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                <button id="generate" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Generate
+                </button>
+                <div class="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
+                    <p>Want to dig deeper into Tailwind?</p>
+                    <p>
+                        <a href="https://tailwindcss.com/docs" class="text-cyan-600 hover:text-cyan-700"> Read the docs &rarr; </a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
+
+    
 
 <script
     src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -25,8 +54,9 @@
 <script>
     $("#generate").click(function(e){
         e.preventDefault();
-        $.getJSON("/api/normal", function(data) {
+        $.getJSON("/api/linear", function(data) {
             $('.value').text(data.value);
+            console.log(data)
         });
     });   
 </script>
