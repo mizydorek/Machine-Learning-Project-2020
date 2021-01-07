@@ -6,6 +6,8 @@ import pandas as pd
 
 # Import Flask.
 import flask as fl 
+from flask import request, jsonfiy make_response
+
 
 # Import LinearRegression model from sklearn linear model.
 from sklearn.linear_model import LinearRegression
@@ -25,16 +27,25 @@ def hello():
 def normal():
     return { 'value': np.random.normal() }
 
-@app.route('/api/linear')
+@app.route('/api/linear', methods=["POST"])
 def model():
-    x = np.random.choice(26)
-    return { 'value': linear(x) }
+
+    req = request.get_json()
+
+    print(req)
+
+    response = make_response(jsonify({ 'value': np.random.normal() }), 200)
+
+    #x = np.random.choice(26)
+
+    #{ 'value': linear(x) }
+    return response
 
 # Load dataset function.
 def load():
     try:
         # Load dataset.
-        df = pd.read_csv("powerproduction.csv")
+        df = pd.read_csv("https://raw.githubusercontent.com/ianmcloughlin/2020A-machstat-project/master/dataset/powerproduction.csv")
         # Drop columns for power equals 0 above 1m/s wind speed.
         df = df.drop(df[(df.speed > 1) & (df.power == 0)].index).reset_index(drop=True)
         # Split dataframe into speed and power columns using pandas.
