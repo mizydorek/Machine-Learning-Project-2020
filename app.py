@@ -15,6 +15,9 @@ from sklearn.linear_model import LinearRegression
 # makes it easy to split dataset into training and testing data.
 from sklearn.model_selection import train_test_split
 
+# Import curve_fit from SciPy to Use non-linear least squares to fit a function to data.
+from scipy.optimize import curve_fit
+
 # create a web app. 
 app = fl.Flask(__name__)
 
@@ -106,3 +109,17 @@ def polynomial(speed):
         return power
     except:
         print("Failed to bulid and train the Polynomial model.")
+
+# Logistic function.
+def func(speed, a, b, c):
+    return a / (1 + b * np.exp(-c * speed))
+
+# Build logistic model. 
+def logistic(speed):
+    # load data.
+    x, y, s, p = load()
+    # Initial guess for the parameters.
+    bounds=(max(p), np.median(p),min(p))
+    # Use non-linear least squares to fit a function to data.
+    popt, pcov = curve_fit(func, s, p, bounds)
+    return func(speed, *popt)
