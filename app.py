@@ -25,12 +25,8 @@ app = fl.Flask(__name__)
 @app.route('/')
 def hello():
     return app.send_static_file('index.html')
-'''
-@app.route('/api/normal')
-def normal():
-    return { 'value': np.random.normal() }
-'''
-@app.route('/api/linear', methods=["POST"])
+
+@app.route('/api/model', methods=["POST"])
 def model():
 
     data = request.get_json()
@@ -40,7 +36,7 @@ def model():
     #print(req)
 
     power = eval(model)(speed)
-    #power = round(power, 4)
+    power = str(round(power, 2))
 
     response = make_response(jsonify(power), 200)
 

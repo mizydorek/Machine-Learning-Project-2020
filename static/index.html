@@ -11,32 +11,39 @@
     <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-                <p class="value"></p>
-                <button id="generate" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                    Generate
-                </button>
-               
-                
-                    <label for="price" class="block text-sm font-medium text-gray-700">Enter wind speed: </label>
-                    <div class="mt-1 relative rounded-md shadow-sm">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span class="text-gray-500 sm:text-sm">
-                          $
+                <div class="py-4 text-base leading-6 space-y-2 text-gray-700 sm:text-md sm:leading-7">
+
+                    <h1 class="text-xl font-medium text-gray-900 tracking-tight">Wind Turbine power production</h1>
+                    <p class="mt-1 italic text-md text-gray-400">Calculate wind turbine power output based on provided wind speed in range from 0 to 25 m/s using one of the four developed models. </p>
+            
+                    <p class="mt-1 italic text-md text-gray-400">Enter wind speed:</p>
+                    <div class="mt-1 flex rounded-md shadow-sm">  
+                        <input type="text" name="speed" id="speed" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 border block w-full py-2 px-3 rounded-none rounded-l-md sm:text-sm border-gray-300" placeholder="0 to 25 m/s">
+                        <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                            m/s
                         </span>
-                      </div>
-                      <input type="text" name="speed" id="speed" class="focus:ring-indigo-700 focus:border-indigo-700 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
-                      <div class="absolute inset-y-0 right-0 flex items-center">
-                        <label for="model" class="sr-only">Currency</label>
-                        <select id="model" name="model" class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
-                          <option>Linear</option>
-                          <option>Polynomial</option>
-                          <option>Logistic</option>
-                        </select>
-                        </div>
                     </div>
-                    <button onclick="submit();" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                        Submit
-                    </button>
+
+                    <p class="mt-1 italic text-md text-gray-400">Choose the model:</p>
+                    <select id="model" name="model" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option>Linear</option>
+                        <option>Polynomial</option>
+                        <option>Logistic</option>
+                        <option>KNearestNeighbor</option>
+                    </select>
+
+                    <div class="mt-1 flex rounded-md shadow-sm">
+                        <input type="text" name="power" id="power" class="power focus:ring-indigo-500 focus:border-indigo-500 flex-1 border block w-full py-2 px-3 rounded-none rounded-l-md sm:text-sm border-gray-300" placeholder="0.00" disabled>
+                        <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                            kW⋅h
+                        </span>
+                    </div>                          
+                    
+                    <button onclick="submit();" class="mt-1 block items-center justify-center w-full px-3 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Calculate
+                    </button>                
+
+                </div>             
             </div>
         </div>
     </div>
@@ -49,13 +56,6 @@
     crossorigin="anonymous">
 </script>
 <script>
-    $("#generate").click(function(e){
-        e.preventDefault();
-        $.getJSON("/api/linear", function(data) {
-            $('.value').text(data.value);
-            console.log(data)
-        });
-    });  
     
     function submit() {
 
@@ -67,8 +67,7 @@
             model: model
         };
 
-
-        fetch(`${window.origin}/api/linear`, {
+        fetch(`${window.origin}/api/model`, {
             method: "POST",
             credentials: "include",
             body: JSON.stringify(data),
@@ -78,15 +77,13 @@
             })
         }).then(function (response){
                 response.json().then(function(data){
-                    $('.value').text(data);
+                    $('.power').val(data);
                     console.log(data)
                 })
         });
 
     }
-
-
-    
+  
 </script>
 </body>
 </html>
