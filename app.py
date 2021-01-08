@@ -8,13 +8,13 @@ import pandas as pd
 import flask as fl 
 from flask import request, jsonify, make_response
 
-
 # Import LinearRegression model from sklearn linear model.
 from sklearn.linear_model import LinearRegression
 # Using train_test_split() from the scikit-learn library, 
 # makes it easy to split dataset into training and testing data.
 from sklearn.model_selection import train_test_split
-
+# Import neighbors from Sklearn to build KNN model.
+from sklearn import neighbors
 # Import curve_fit from SciPy to Use non-linear least squares to fit a function to data.
 from scipy.optimize import curve_fit
 
@@ -116,10 +116,29 @@ def func(speed, a, b, c):
 
 # Build logistic model. 
 def logistic(speed):
-    # load data.
-    x, y, s, p = load()
-    # Initial guess for the parameters.
-    bounds=(max(p), np.median(p),min(p))
-    # Use non-linear least squares to fit a function to data.
-    popt, pcov = curve_fit(func, s, p, bounds)
-    return func(speed, *popt)
+    try:
+        # load data.
+        x, y, s, p = load()
+        # Initial guess for the parameters.
+        bounds=(max(p), np.median(p),min(p))
+        # Use non-linear least squares to fit a function to data.
+        popt, pcov = curve_fit(func, s, p, bounds)
+        return func(speed, *popt)
+    except:
+        print("Failed to bulid and train the Logistic model.")
+
+# Build K Nearest Neighbor Model.
+def knearestneighbor(speed):
+    try:
+        # load preprocess data.
+        x_train, x_test, y_train, y_test = preprocess()
+        # Create KNN regressor and set k to 3 nearest points.
+        k = 3 
+        # By deafualt weight function is set to uniform.
+        knn = neighbors.KNeighborsRegressor(n_neighbors = k)
+        # Fit the regressor to the data.
+        knn.fit(x_train,y_train);
+        speed = np.array(speed)
+        return knn.predict(speed.reshape(1, -1))[0]
+    except:
+        print("Failed to bulid and train the K Nearest Neighbor Model.")
