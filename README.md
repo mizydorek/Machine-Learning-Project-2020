@@ -108,7 +108,7 @@ In order to start docker container enter the command
 docker run -i -t -p 5000:5000 --rm wind-turbine-app
 ```
 
-Localhost server can be accessed at [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+Localhost server can be accessed at [http://0.0.0.0:5000/](http://0.0.0.0:5000/)
 
 To stop server running press `ctrl` + `c` in terminal.  
 
